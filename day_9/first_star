@@ -1,0 +1,114 @@
+#include <string>
+#include <iostream>
+#include <vector>
+#include <fstream>
+#include <sstream>
+#include <istream>
+#include <iterator>
+#include <cmath>
+#define max_x 9
+#define max_y 4
+
+int find_diff(std::string first,std::string second) {
+    std::vector<char> diff;
+    int arr[7] = { 0 };
+    //0 1 2 3 4 5 6
+    //a b c d e f g
+    for (int i = 0; i < first.size(); i++) {
+        int smf = first[i]-'a';
+        arr[smf]++;
+    }
+    for (int i = 0; i < second.size(); i++) {
+        int smf = second[i] - 'a';
+        arr[smf]++;
+    }
+    for (int i = 0; i < 7; i++) {
+        if (arr[i] == 1) {
+            diff.push_back(i + 'a');
+        }
+    }
+    int size=diff.size();
+    return size;
+}
+int compare(std::string first,std::string second){
+    std::vector<char> diff;
+    int arr[7] = { 0 };
+    //0 1 2 3 4 5 6
+    //a b c d e f g
+    for (int i = 0; i < first.size(); i++) {
+        int smf = first[i]-'a';
+        arr[smf]++;
+    }
+    for (int i = 0; i < second.size(); i++) {
+        int smf = second[i] - 'a';
+        arr[smf]++;
+    }
+    for (int i = 0; i < 7; i++) {
+        if (arr[i] == 1) {
+            return 0;
+        }
+    }
+    return 1;
+}
+bool low_points_detect(int map[max_y+1][max_x+1],int y,int x){
+    if(x==0 and y==0){
+        if(map[y][x]<map[y+1][x] and map[y][x]<map[y][x+1]) return 1;
+    }
+    if(x==0 and y==max_y){
+        if(map[y][x]<map[y-1][x] and map[y][x]<map[y][x+1]) return 1;
+    }
+    if(x==max_x and y==0){
+        if(map[y][x]<map[y+1][x] and map[y][x]<map[y][x-1]) return 1;
+    }
+    if(x==max_x and y==max_y){
+        if(map[y][x]<map[y-1][x] and map[y][x]<map[y][x-1]) return 1;
+    }
+    if(x==0 and y!=0 and y!=max_y){
+        if(map[y][x]<map[y-1][x] and map[y][x]<map[y+1][x] and map[y][x]<map[y][x+1]) return 1;
+    }
+    if(x==max_x and y!=0 and y!=max_y){
+        if(map[y][x]<map[y-1][x] and map[y][x]<map[y+1][x] and map[y][x]<map[y][x-1]) return 1;
+    }
+    if(y==0 and x!=0 and x!=max_x){
+        if(map[y][x]<map[y][x+1] and map[y][x]<map[y][x-1] and map[y][x]<map[y+1][x]) return 1;
+    }
+    if(y==max_y and x!=0 and x!=max_x){
+        if(map[y][x]<map[y][x+1] and map[y][x]<map[y][x-1] and map[y][x]<map[y-1][x]) return 1;
+    }
+    if(x!=0 and x!=max_x and y!=0 and y!=max_y){
+        if(map[y][x]<map[y][x+1] and map[y][x]<map[y][x-1] and map[y][x]<map[y-1][x] and map[y][x]<map[y+1][x]) return 1;
+    }
+    return 0;
+}
+int main() {
+
+
+    std::ifstream file("D:\\CLion_2021.2.1\\MyProjects\\day_8\\input.txt");
+    std::string line;
+    int map[max_y+1][max_x+1];
+    int j=0;
+    while (getline(file, line)) {
+
+
+        std::istringstream ss(line);
+        std::istream_iterator<std::string> begin(ss), end;
+
+        //putting all the tokens in the vector
+        std::vector<std::string> arrayTokens(begin, end);
+        for(int i=0;i<=max_x;i++){
+            map[j][i]=arrayTokens[0][i]-'0';
+        }
+        j++;
+    }
+    int sum_of_low_points=0;
+    for(int y=0;y<=max_y;y++){
+        for(int x=0;x<=max_x;x++){
+            int current_number=map[y][x];
+            if(low_points_detect(map,y,x)){
+                sum_of_low_points+=map[y][x]+1;
+            }
+        }
+    }
+
+    return sum_of_low_points;
+}
